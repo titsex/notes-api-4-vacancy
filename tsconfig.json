@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "lib": ["ES6"],
+        "types": ["reflect-metadata"],
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "outDir": "./build",
+        "paths": {
+            "@class/*": ["./src/classes/*"],
+            "@route/*": ["./src/routes/*"],
+            "@controller/*": ["./src/controllers/*"],
+            "@validation/*": ["./src/validations/*"],
+            "@middleware/*": ["./src/middlewares/*"],
+            "@container": ["./src/inversify.config"],
+            "@service/*": ["./src/services/*"],
+            "@dto/*": ["./src/dto/*"],
+            "@model/*": ["./src/models/*"],
+            "@router": ["./src/routes/index"],
+            "@consts": ["./src/constants"],
+            "@types": ["./src/types"],
+            "@utils": ["./src/utils"]
+        }
+    },
+    "include": ["./src/**/*"]
+}
