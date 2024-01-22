@@ -21,7 +21,7 @@ class Mailer {
         })
 
         // Since nodemailer does not have a built-in connection check, I use this dirty hack.
-        Mailer.sendMail('', '', '').catch((error) => {
+        Mailer.send('', '', '').catch((error) => {
             if (error instanceof Error) {
                 if ('responseCode' in error && error.responseCode === MailerConnectionErrors.INVALID_AUTH) {
                     throw new ApplicationError(
@@ -35,7 +35,7 @@ class Mailer {
         Logger.info('Mailer has been successfully connected!')
     }
 
-    public static async sendMail(to: string, subject: string, message: string) {
+    public static async send(to: string, subject: string, message: string) {
         await Mailer.client.sendMail({
             from: MAILER_CONNECTION_OPTIONS.user,
             to,

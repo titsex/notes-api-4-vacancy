@@ -24,7 +24,7 @@ class Cache {
         }
     }
 
-    public static async getCache(key: string) {
+    public static async get(key: string) {
         try {
             return await this.client.get(`${key}`)
         } catch (error) {
@@ -32,7 +32,7 @@ class Cache {
         }
     }
 
-    public static async setCache(key: string, value: string) {
+    public static async set(key: string, value: string) {
         try {
             await this.client.set(`${key}`, value, { EX: 60 * 5 })
         } catch (error) {
@@ -40,7 +40,7 @@ class Cache {
         }
     }
 
-    public static async deleteCache(key: string) {
+    public static async delete(key: string) {
         try {
             await this.client.del(`${key}`)
         } catch (error) {

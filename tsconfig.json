@@ -22,6 +22,7 @@
             "@container": ["./src/inversify.config"],
             "@service/*": ["./src/services/*"],
             "@dto/*": ["./src/dto/*"],
+            "@lib/*": ["./src/lib/*/index.ts"],
             "@model/*": ["./src/models/*"],
             "@router": ["./src/routes/index"],
             "@consts": ["./src/constants"],

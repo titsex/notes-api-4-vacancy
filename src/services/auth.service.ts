@@ -9,7 +9,7 @@ import { BadRequestError } from '@class/Error'
 import { inject, injectable } from 'inversify'
 import { generateUniqueHex } from '@utils'
 import { CONTAINER_NAMES } from '@consts'
-import { CachedUser } from '@types'
+import { User } from '@types'
 import { hash } from 'bcrypt'
 
 @injectable()
@@ -17,7 +17,7 @@ class AuthService {
     @inject(CONTAINER_NAMES.TOKEN_SERVICE) private tokenService!: TokenService
 
     public registration = async (data: RegistrationDto) => {
-        const cachedData = await Cache.getCache(data.email)
+        const cachedData = await Cache.get(data.email)
 
         if (cachedData)
             throw new BadRequestError('This mail is already at the last stage of registration, awaiting confirmation')
@@ -34,19 +34,19 @@ class AuthService {
 
         const activationCode = await generateUniqueHex()
 
-        await Mailer.sendMail(data.email, 'Account Activation', activationCode)
-        await Cache.setCache(data.email, JSON.stringify({ ...newUser, activationCode }))
+        await Mailer.send(data.email, 'Account Activation', activationCode)
+        await Cache.set(data.email, JSON.stringify({ ...newUser, activationCode }))
 
         return { message: 'To confirm your identity, we have sent you an email link to activate your account' }
     }
 
     public activate = async (data: ActivationDto) => {
-        const cachedData = await Cache.getCache(data.email)
+        const cachedData = await Cache.get(data.email)
         if (!cachedData) throw new BadRequestError('The email is incorrect or the time has expired')
 
-        await Cache.deleteCache(data.email)
+        await Cache.delete(data.email)
 
-        const { activationCode, ...user } = JSON.parse(cachedData) as CachedUser
+        const { activationCode, ...user } = JSON.parse(cachedData) as User & { activationCode: string }
 
         if (data.activationCode !== activationCode) throw new BadRequestError('Invalid activation link')
 

@@ -4,12 +4,10 @@ import { ValidationError } from '@class/Error'
 
 function validationMiddleware(request: Request, response: Response, next: NextFunction) {
     const result = validationResult(request)
+    if (result.isEmpty()) return next()
+
     const errors = result.array()
-
-    // express-validator has a slightly crooked typing.
-    if (!result.isEmpty()) throw new ValidationError(errors as unknown as ValidationError[])
-
-    next()
+    throw new ValidationError(errors)
 }
 
 export default validationMiddleware

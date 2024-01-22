@@ -1,5 +1,7 @@
 import 'reflect-metadata'
 
+import applyRouterMiddlewares from '@lib/apply-router-middlewares'
+import asyncRouterHandlers from '@lib/async-router-handlers'
 import errorMiddleware from '@middleware/error.middleware'
 import Database from '@class/Database'
 import Mailer from '@class/Mailer'
@@ -8,9 +10,9 @@ import Cache from '@class/Cache'
 import express from 'express'
 import router from '@router'
 
-import { PORT, DATABASE_URL, REDIS_URL, MAILER_CONNECTION_OPTIONS } from '@consts'
+import { DATABASE_URL, MAILER_CONNECTION_OPTIONS, PORT, REDIS_URL } from '@consts'
 import { ApplicationError } from '@class/Error'
-import { asyncHandlerStack } from '@utils'
+import validationMiddleware from '@middleware/validation.middleware'
 
 const application = express()
 
@@ -21,7 +23,16 @@ const bootstrap = async () => {
         await Cache.connect(REDIS_URL!)
 
         application.use(express.json())
-        application.use('/api', asyncHandlerStack(router))
+
+        application.use(
+            '/api',
+            applyRouterMiddlewares(asyncRouterHandlers(router), {
+                handle: validationMiddleware,
+                name: 'validationMiddleware',
+                position: -1,
+            })
+        )
+
         application.use(errorMiddleware)
 
         application.listen(typeof PORT === 'number' ? PORT : parseInt(PORT), () =>

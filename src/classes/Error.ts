@@ -1,3 +1,4 @@
+import { ValidationError as ExpressValidationError } from 'express-validator'
 import { ApplicationErrorPrefixes } from '@types'
 
 class ApplicationError {
@@ -21,7 +22,7 @@ class BadRequestError extends HttpError {
 }
 
 class ValidationError extends HttpError {
-    constructor(public error: ValidationError[]) {
+    constructor(public error: ExpressValidationError[]) {
         super(400, 'Validation error')
     }
 }

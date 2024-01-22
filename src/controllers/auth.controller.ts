@@ -1,7 +1,7 @@
 import AuthService from '@service/auth.service'
 
 import { inject, injectable } from 'inversify'
-import { Response, Request } from 'express'
+import { Request, Response } from 'express'
 import { CONTAINER_NAMES } from '@consts'
 import { getIp } from '@utils'
 
