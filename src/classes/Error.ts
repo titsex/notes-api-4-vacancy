@@ -27,4 +27,10 @@ class ValidationError extends HttpError {
     }
 }
 
-export { HttpError, ApplicationError, BadRequestError, ValidationError }
+class UnauthorizeError extends HttpError {
+    constructor(public error = 'Unauthorized') {
+        super(401, 'You must be logged in')
+    }
+}
+
+export { HttpError, ApplicationError, BadRequestError, ValidationError, UnauthorizeError }

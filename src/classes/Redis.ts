@@ -4,18 +4,18 @@ import { createClient, RedisClientType } from 'redis'
 import { ApplicationErrorPrefixes } from '@types'
 import { ApplicationError } from '@class/Error'
 
-class Cache {
+class Redis {
     private static client: RedisClientType
 
     public static async connect(url: string) {
         try {
-            Cache.client = createClient({
+            Redis.client = createClient({
                 url,
             })
 
-            await Cache.client.connect()
+            await Redis.client.connect()
 
-            Logger.info('Cache has been successfully connected!')
+            Logger.info('Redis has been successfully connected!')
         } catch (error) {
             throw new ApplicationError(
                 ApplicationErrorPrefixes.CACHE_CONNECTION,
@@ -49,4 +49,4 @@ class Cache {
     }
 }
 
-export default Cache
+export default Redis

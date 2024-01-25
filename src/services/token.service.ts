@@ -36,24 +36,21 @@ class TokenService {
     public saveRefreshToken = async (userObjectId: Types.ObjectId, token: string, ip: string) => {
         const userRefreshTokens = await TokenModel.find({ user: userObjectId })
 
-        if (userRefreshTokens.length) {
-            for (let i = 0; i < userRefreshTokens.length; i++) {
-                const tokenInfo = decode(userRefreshTokens[i].token) as JwtPayload
+        for (let i = 0; i < userRefreshTokens.length; i++) {
+            const tokenInfo = decode(userRefreshTokens[i].token) as JwtPayload
 
-                if (Date.now() < tokenInfo.exp!) await TokenModel.deleteOne({ id: userRefreshTokens[i].id })
+            if (Date.now() < tokenInfo.exp!) await TokenModel.deleteOne({ id: userRefreshTokens[i].id })
 
-                if (userRefreshTokens[i].ip === ip) {
-                    const userRefreshToken = await TokenModel.findOne({ id: userRefreshTokens[i].id })
+            if (userRefreshTokens[i].ip === ip) {
+                userRefreshTokens[i].token = token
+                userRefreshTokens[i].lastSignIn = Date.now()
 
-                    userRefreshToken!.token = token
-                    userRefreshToken!.lastSignIn = Date.now()
-
-                    return await userRefreshToken!.save()
-                }
+                return await userRefreshTokens[i].save()
             }
         }
 
         const newUserRefreshToken = new TokenModel({
+            token,
             user: userObjectId,
             ip,
             refreshToken: token,

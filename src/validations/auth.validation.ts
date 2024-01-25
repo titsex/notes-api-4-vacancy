@@ -1,4 +1,4 @@
-import { body, query } from 'express-validator'
+import { body, param } from 'express-validator'
 
 class AuthValidation {
     public static registration = [
@@ -7,8 +7,13 @@ class AuthValidation {
     ]
 
     public static activation = [
-        query('email', 'The email must be an email').isEmail(),
-        query('code', 'The code parameter must not be empty').notEmpty(),
+        param('email', 'The email must be an email').isEmail(),
+        param('code', 'The code parameter must not be empty').notEmpty(),
+    ]
+
+    public static login = [
+        body('email', 'The email must be an email').isEmail(),
+        body('password', 'Password length is at least 6 characters').isLength({ min: 8 }),
     ]
 }
 
